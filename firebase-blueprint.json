@@ -1,0 +1,47 @@
+{
+  "entities": {
+    "Pet": {
+      "title": "Pet Profile",
+      "description": "Details of pets in the shop, including name, species, breed, age, price, status, description, and image URL",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID for the pet" },
+        "name": { "type": "string", "description": "The name of the pet" },
+        "species": { "type": "string", "description": "The species of the pet (e.g. Dog, Cat, Bird)" },
+        "breed": { "type": "string", "description": "The breed of the pet" },
+        "age": { "type": "string", "description": "The age of the pet (e.g., '3 months', '1 year')" },
+        "price": { "type": "number", "description": "The adoption fee or purchase price in USD" },
+        "status": { "type": "string", "enum": ["available", "adopted", "pending"], "description": "The pet's current availability status" },
+        "description": { "type": "string", "description": "A description of the pet's personality and history" },
+        "imageUrl": { "type": "string", "format": "uri", "description": "A secure URL to the pet's photo" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of creation" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp of the last update" }
+      },
+      "required": ["name", "species", "breed", "age", "price", "status", "description", "imageUrl", "createdAt", "updatedAt"]
+    },
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "Messages submitted by visitors through the contact form",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique message ID" },
+        "name": { "type": "string", "description": "The name of the visitor" },
+        "email": { "type": "string", "description": "The email of the visitor" },
+        "subject": { "type": "string", "description": "The subject of the message" },
+        "message": { "type": "string", "description": "The main content of the message" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of submission" }
+      },
+      "required": ["name", "email", "subject", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/pets/{petId}": {
+      "schema": "Pet",
+      "description": "Inventory of pet profiles in the pet shop"
+    },
+    "/contacts/{contactId}": {
+      "schema": "ContactMessage",
+      "description": "Visitor contact message submissions"
+    }
+  }
+}

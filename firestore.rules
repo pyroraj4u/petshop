@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    // Exclusive admin access based on the verified email of the user
+    function isAdmin() {
+      return isVerifiedUser() && request.auth.token.email == "bharathiraj.poongan@gmail.com";
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validate the complete schema on write
+    function isValidPet(data) {
+      return data.keys().hasAll(['name', 'species', 'breed', 'age', 'price', 'status', 'description', 'imageUrl', 'createdAt', 'updatedAt'])
+        && data.keys().size() == 10
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.species is string && data.species.size() > 0 && data.species.size() <= 50
+        && data.breed is string && data.breed.size() > 0 && data.breed.size() <= 100
+        && data.age is string && data.age.size() > 0 && data.age.size() <= 50
+        && data.price is number && data.price >= 0 && data.price <= 1000000
+        && data.status is string && (data.status == 'available' || data.status == 'adopted' || data.status == 'pending')
+        && data.description is string && data.description.size() <= 2000
+        && data.imageUrl is string && data.imageUrl.size() <= 1000
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    // Validate Contact Message schema on submit
+    function isValidContactMessage(data) {
+      return data.keys().hasAll(['name', 'email', 'subject', 'message', 'createdAt'])
+        && data.keys().size() == 5
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.email is string && data.email.size() > 0 && data.email.size() <= 100
+        && data.subject is string && data.subject.size() > 0 && data.subject.size() <= 200
+        && data.message is string && data.message.size() > 0 && data.message.size() <= 3000
+        && data.createdAt is timestamp;
+    }
+
+    // Rules for /pets/{petId}
+    match /pets/{petId} {
+      // Anyone can read pet profiles
+      allow read: if true;
+      
+      // Only the admin can add new pet profiles
+      allow create: if isAdmin()
+        && isValidId(petId)
+        && isValidPet(incoming())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+        
+      // Only the admin can edit existing pet profiles
+      allow update: if isAdmin()
+        && isValidId(petId)
+        && isValidPet(incoming())
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time;
+        
+      // Only the admin can delete pet profiles
+      allow delete: if isAdmin()
+        && isValidId(petId);
+    }
+
+    // Rules for /contacts/{contactId}
+    match /contacts/{contactId} {
+      // Anyone can submit support/contact questions
+      allow create: if isValidId(contactId)
+        && isValidContactMessage(incoming())
+        && incoming().createdAt == request.time;
+        
+      // Only the administrative owner can review/delete inquiries
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

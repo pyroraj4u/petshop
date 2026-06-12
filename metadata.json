@@ -1,0 +1,6 @@
+{
+  "name": "Pet Shop",
+  "description": "A pet shop website featuring a beautiful home page, services display, about page, and contact form, with an admin panel for real-time pet profiles and inventory management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
