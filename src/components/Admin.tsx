@@ -66,7 +66,7 @@ export default function Admin({
     { name: 'Puppy 2', url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=600' },
     { name: 'Kitten', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600' },
     { name: 'Rabbit', url: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&q=80&w=600' },
-    { name: 'Bird', url: 'https://images.unsplash.com/photo-1522856268185-3ce0f89a9f91?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Bird', url: 'https://images.unsplash.com/photo-1480044965905-02098d419e96?auto=format&fit=crop&q=80&w=600' },
   ];
 
   // Enable/disable sandbox depending on auth verification status
@@ -505,7 +505,7 @@ export default function Admin({
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-start">
                         <h3 className="font-display font-bold text-lg text-stone-900">{pet.name}</h3>
-                        <span className="font-display font-bold text-amber-700">${pet.price}</span>
+                        <span className="font-display font-bold text-amber-700">₹{pet.price.toLocaleString('en-IN')}</span>
                       </div>
                       <p className="text-xs text-stone-500"><strong>Breed:</strong> {pet.breed} | <strong>Age:</strong> {pet.age}</p>
                       <p className="text-xs text-stone-605 text-stone-600 line-clamp-3 leading-relaxed mt-1">
@@ -704,7 +704,7 @@ export default function Admin({
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-stone-700">Adoption Price ($) *</label>
+                    <label className="text-xs font-bold text-stone-700">Adoption Price (₹) *</label>
                     <input
                       type="number"
                       required

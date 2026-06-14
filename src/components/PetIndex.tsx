@@ -199,7 +199,7 @@ export default function PetIndex({ localPets, isAdminVerified, onExpressInterest
                       {pet.name}
                     </h3>
                     <span className="font-display font-extrabold text-amber-700 text-sm">
-                      ${pet.price}
+                      ₹{pet.price.toLocaleString('en-IN')}
                     </span>
                   </div>
                   <p className="text-[11px] text-stone-500 font-semibold tracking-wide">
@@ -289,7 +289,7 @@ export default function PetIndex({ localPets, isAdminVerified, onExpressInterest
                   <div className="grid grid-cols-3 gap-3 p-3 bg-stone-50 border border-stone-200 rounded-xl text-center">
                     <div>
                       <span className="text-[10px] text-stone-400 uppercase font-bold block">Adoption Fee</span>
-                      <span className="font-display font-bold text-amber-700 text-sm">${selectedPet.price}</span>
+                      <span className="font-display font-bold text-amber-700 text-sm">₹{selectedPet.price.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-stone-400 uppercase font-bold block">Breed Breed</span>
